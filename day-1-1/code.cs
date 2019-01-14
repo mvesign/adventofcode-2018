@@ -7,13 +7,13 @@ namespace MVESIGN.AdventOfCode
     {
         static void Main(string[] args)
         {
-            var lines = File.ReadAllLines(@"input.txt");
+            var frequencyChanges  = File.ReadAllLines(@"input.txt");
             
-            var result = 0;
-            foreach (var line in lines)
-                result = result + int.Parse(line.Substring(1)) * (line.Substring(0,1) == "+" ? 1 : -1);
+            var currentFrequency = 0;
+            foreach (var frequencyChange in frequencyChanges)
+                currentFrequency = currentFrequency + int.Parse(frequencyChange.Substring(1)) * (frequencyChange.Substring(0,1) == "+" ? 1 : -1);
             
-            Console.WriteLine($"Frequency: {result}");
+            Console.WriteLine($"Frequency: {currentFrequency}");
         }
     }
 }

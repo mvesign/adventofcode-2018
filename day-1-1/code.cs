@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 
 namespace MVESIGN.AdventOfCode
 {
@@ -7,13 +8,13 @@ namespace MVESIGN.AdventOfCode
     {
         static void Main(string[] args)
         {
-            var frequencyChanges  = File.ReadAllLines(@"input.txt");
+            var frequency = 0;
+            File.ReadAllLines(@"input.txt")
+                .Select(line => int.Parse(line))
+                .ToList()
+                .ForEach(f => frequency += f);
             
-            var currentFrequency = 0;
-            foreach (var frequencyChange in frequencyChanges)
-                currentFrequency = currentFrequency + int.Parse(frequencyChange.Substring(1)) * (frequencyChange.Substring(0,1) == "+" ? 1 : -1);
-            
-            Console.WriteLine($"Frequency: {currentFrequency}");
+            Console.WriteLine($"Frequency: {frequency}");
         }
     }
 }

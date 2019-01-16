@@ -8,19 +8,19 @@ So like the previous years, each day part is present in a separate directory wit
 
 ## Check solution of the day.
 
-To check the solution of each day part, you'll need the C# 6.0 compiler (https://github.com/dotnet/roslyn#download-c-and-visual-basic) present in your PATH environment variables. After that is setup, it is an easy 1-2-3 step in order to get the solution.
+To check the solution of each day part, you'll need the latest .NET Core version with C# 6.0 or higher (https://github.com/dotnet/roslyn). After that, it's an easy 1-2-3 step in order to get the solution of each day part.
 
-### 1. Go to the directory of the file.
+### 1. Go to the directory of the day part.
 ```
 cd C:\Projects\GitHub\adventofcode-2018\day-1-1
 ```
 
-### 2. Build all C# files into a solution.
+### 2. Build the project.
 ```
-csc /out:solution.exe *.cs
+dotnet build
 ```
 
 ### 3. Execute the solution.
 ```
-solution.exe
+dotnet run
 ```

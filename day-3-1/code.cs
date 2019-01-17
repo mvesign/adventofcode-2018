@@ -16,23 +16,25 @@ namespace MVESIGN.AdventOfCode
 
             foreach (var claim in claims)
             {
-                var matches = new Regex(@"^#\d+ @ (?<start>[0-9]+),(?<end>[0-9]+): (?<width>[0-9]+)x(?<height>[0-9]+)$")
-                    .Match(claim)
-                    .Groups;
+                var matches = new Regex(@"^#\d+ @ (?<start>[0-9]+),(?<end>[0-9]+): (?<width>[0-9]+)x(?<height>[0-9]+)$").Match(claim).Groups
+                    .Where(g => int.TryParse(g.Value, out _))
+                    .Select(g => int.Parse(g.Value))
+                    .ToList();
                 
-                var start = int.Parse(matches["start"].Value);
-                var end = int.Parse(matches["end"].Value);
-                var width = int.Parse(matches["width"].Value);
-                var height = int.Parse(matches["height"].Value);
+                var start = matches[0];
+                var end = matches[1];
+                var width = matches[2];
+                var height = matches[3];
 
-                for (var i = start; i < start + width; i++)
+                for (var x = start; x < start + width; x++)
                 {
-                    for (var j = end; j < end + height; j++)
+                    for (var y = end; y < end + height; y++)
                     {
-                        var key = j * 10000 + i;
+                        var key = y * 1000 + x;
                         if (!positions.ContainsKey(key))
-                            positions.Add(key, 0);
-                        positions[key]++;
+                            positions.Add(key, 1);
+                        else
+                            positions[key]++;
                     }
                 }
             }

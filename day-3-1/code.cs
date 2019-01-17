@@ -16,7 +16,7 @@ namespace MVESIGN.AdventOfCode
 
             foreach (var claim in claims)
             {
-                var matches = new Regex(@"^#\d+ @ (?<start>[0-9]+),(?<end>[0-9]+): (?<width>[0-9]+)x(?<height>[0-9]+)$").Match(claim).Groups
+                var matches = new Regex(@"^#\d+ @ (?<start>\d+),(?<end>\d+): (?<width>\d+)x(?<height>\d+)$").Match(claim).Groups
                     .Where(g => int.TryParse(g.Value, out _))
                     .Select(g => int.Parse(g.Value))
                     .ToList();

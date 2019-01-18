@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MVESIGN.AdventOfCode
 {
@@ -7,16 +10,47 @@ namespace MVESIGN.AdventOfCode
     {
         static void Main(string[] args)
         {
-            var actions = File.ReadAllLines(@"input.txt");
+            var actions = File.ReadAllLines(@"input.txt")
+                .Select(line =>
+                {
+                    var groups = new Regex(@"^\[(?<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2})\] (?<action>.+)$").Match(line).Groups;
+                    return new
+                    {
+                        Action = groups["action"].Value,
+                        DateTime = DateTime.Parse(groups["datetime"].Value)
+                    };
+                })
+                .OrderBy(action => action.DateTime)
+                .ToList();
 
+            var guardId = 0;
+            var minuteAsleep = 0;
+            var sleepSchedule = new Dictionary<(int, int), int>();
+            var totalSleep = new Dictionary<int, int>();
             foreach (var action in actions)
             {
-                var groups = new Regex(@"^\[(?<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2})\] (?<action>.+)$").Match(action).Groups;
-                foreach (var group in groups)
+                if (action.Action.StartsWith("Guard"))
+                    guardId = int.Parse(action.Action.Replace("Guard #", string.Empty).Replace(" begins shift", string.Empty));
+                if (action.Action == "falls asleep")
+                    minuteAsleep = action.DateTime.Minute;
+                else if (action.Action == "wakes up")
                 {
+                    for(;minuteAsleep < action.DateTime.Minute; minuteAsleep++)
+                    {
+                        if (!sleepSchedule.ContainsKey((guardId, minuteAsleep)))
+                            sleepSchedule.Add((guardId, minuteAsleep), 0);
+                        if (!totalSleep.ContainsKey(guardId))
+                            totalSleep.Add(guardId, 0);
 
+                        sleepSchedule[(guardId, minuteAsleep)]++;
+                        totalSleep[guardId]++;
+                    }
                 }
             }
+
+            guardId = totalSleep.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+            var minute = sleepSchedule.Where(s => s.Key.Item1 == guardId).Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+            Console.WriteLine($"Guard {guardId} slept the most in minute {minute.Item2}, resulting in the answer {guardId * minute.Item2}");
         }
     }
 }
